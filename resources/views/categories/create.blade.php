@@ -1,10 +1,10 @@
 @extends('app')
-@section('title')
-@section('breadcrumb', 'Dashboard')
+@section('title', 'Data Category')
+@section('breadcrumb', 'Category')
 @section('content')
     <div class="card">
         <div class="card-body">
-            <h1>Tambah User</h1>
+            <h1>Tambah Category</h1>
             @if ($errors->any())
                 <ul style="color:red;">
                     @foreach ($errors->all() as $error)
@@ -16,8 +16,11 @@
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Name</label>
-                    <input class="form-control-custom" type="text" name="name" value="{{ old('name') }}"
-                        placeholder="category name">
+                    <div class="input-group-custom">
+                        <span class="input-group-text-custom"><i class="bi bi-list"></i></i></span>
+                        <input class="form-control-custom" type="text" name="name" value="{{ old('name') }}"
+                            placeholder="category name">
+                    </div>
                 </div>
                 <button class="btn btn-success" type="submit">
                     Simpan

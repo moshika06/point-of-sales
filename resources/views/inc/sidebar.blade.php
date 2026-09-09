@@ -1,5 +1,5 @@
   <div class="sidebar-wrapper" id="sidebar">
-      <a href="index.html" class="sidebar-brand">
+      <a href="{{ '/admin/dashboard' }}" class="sidebar-brand">
           <i class="bi bi-asterisk"></i>
           <span>Spark Admin</span>
       </a>
@@ -21,9 +21,16 @@
                       </a>
                   </li>
                   <li class="sidebar-menu-item">
-                      <a href="{{ route('roles.index') }}" class="sidebar-menu-link" id="menu-overview" title="User">
+                      <a href="{{ route('roles.index') }}" class="sidebar-menu-link" id="menu-overview" title="Role">
                           <i class="bi bi-people"></i>
                           <span>Role</span>
+                      </a>
+                  </li>
+                  <li class="sidebar-menu-item">
+                      <a href="{{ route('products.index') }}" class="sidebar-menu-link" id="menu-overview"
+                          title="Product">
+                          <i class="bi bi-bag"></i>
+                          <span>Product</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">

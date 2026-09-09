@@ -30,7 +30,7 @@
          </div>
      </div>
      <div class="navbar-search-wrapper">
-         <input type="text" class="navbar-search-input" placeholder="Search anything in Spark..." id="main-search">
+         <input type="text" class="navbar-search-input" placeholder="Search..." id="main-search">
          <button class="navbar-search-btn" aria-label="Search">
              <i class="bi bi-search"></i>
          </button>

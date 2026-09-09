@@ -27,15 +27,15 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($categories as $data)
+                    @foreach ($categories as $category)
                         <tr>
                             <td class="table-order-id">{{ $loop->iteration }}</td>
-                            <td class="table-name">{{ $data->name }}</td>
+                            <td class="table-name">{{ $category->name }}</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-1">
-                                    <a href="{{ route('categories.edit', $data->id) }}" class="table-btn-action"
+                                    <a href="{{ route('categories.edit', $category->id) }}" class="table-btn-action"
                                         title="Edit row"><i class="bi bi-pencil"></i></a>
-                                    <form action="{{ route('categories.destroy', $data->id) }}" method="POST"
+                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
                                         style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus user?')">
                                         @csrf
                                         @method('DELETE')

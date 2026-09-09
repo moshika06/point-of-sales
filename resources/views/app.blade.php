@@ -34,7 +34,7 @@
                             Home
                         </a>
                     </li>
-
+  
                     <li class="breadcrumb-item active text-main" aria-current="page">
                         @yield('breadcrumb', 'Dashboard')
                     </li>

@@ -16,17 +16,26 @@
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Name</label>
-                    <input class="form-control-custom" type="text" name="name" value="{{ old('name') }}"
-                        placeholder="your name">
+                    <div class="input-group-custom">
+                        <span class="input-group-text-custom"><i class="bi bi-people"></i></span>
+                        <input class="form-control-custom" type="text" name="name" value="{{ old('name') }}"
+                            placeholder="your name">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input class="form-control-custom" type="email" name="email" value="{{ old('email') }}"
-                        placeholder="example@gmail.com">
+                    <div class="input-group-custom">
+                        <span class="input-group-text-custom">@</i></span>
+                        <input class="form-control-custom" type="email" name="email" value="{{ old('email') }}"
+                            placeholder="example@gmail.com">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input class="form-control-custom" type="password" name="password" placeholder="your password">
+                    <div class="input-group-custom">
+                        <span class="input-group-text-custom"><i class="bi bi-lock"></i></span>
+                        <input class="form-control-custom" type="password" name="password" placeholder="your password">
+                    </div>
                 </div>
                 <button class="btn btn-success" type="submit">
                     Simpan
