@@ -1,43 +1,52 @@
   <div class="sidebar-wrapper" id="sidebar">
       <a href="{{ '/admin/dashboard' }}" class="sidebar-brand">
           <i class="bi bi-asterisk"></i>
-          <span>Spark Admin</span>
+          <span>Admin</span>
       </a>
       <div class="flex-grow-1 overflow-y-auto">
-          <!-- Group: Menu -->
           <div class="sidebar-menu-section">
               <div class="sidebar-menu-title">Menu</div>
               <ul class="sidebar-menu-list">
                   <li class="sidebar-menu-item">
-                      <a href="" class="sidebar-menu-link" id="menu-overview" title="Overview">
+                      <a href="{{ route('dashboard.index') }}" class="sidebar-menu-link" title="Dashboard">
                           <i class="bi bi-grid-fill"></i>
                           <span>Dashboard</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">
-                      <a href="{{ route('users.index') }}" class="sidebar-menu-link" id="menu-overview" title="User">
+                      <a href="{{ route('users.index') }}" class="sidebar-menu-link" title="User">
                           <i class="bi bi-person"></i>
                           <span>User</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">
-                      <a href="{{ route('roles.index') }}" class="sidebar-menu-link" id="menu-overview" title="Role">
+                      <a href="{{ route('roles.index') }}" class="sidebar-menu-link" title="Role">
                           <i class="bi bi-person-gear"></i>
                           <span>Role</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">
-                      <a href="{{ route('products.index') }}" class="sidebar-menu-link" id="menu-overview"
-                          title="Product">
+                      <a href="{{ route('products.index') }}" class="sidebar-menu-link" title="Product">
                           <i class="bi bi-bag"></i>
                           <span>Product</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">
-                      <a href="{{ route('categories.index') }}" class="sidebar-menu-link" id="menu-overview"
-                          title="Category">
+                      <a href="{{ route('categories.index') }}" class="sidebar-menu-link" title="Category">
                           <i class="bi bi-input-cursor-text"></i>
                           <span>Category</span>
+                      </a>
+                  </li>
+                  <li class="sidebar-menu-item">
+                      <a href="{{ route('transactions.index') }}" class="sidebar-menu-link" title="Transaction">
+                          <i class="bi bi-cart-check"></i>
+                          <span>Transaction</span>
+                      </a>
+                  </li>
+                  <li class="sidebar-menu-item">
+                      <a href="{{ route('reports.index') }}" class="sidebar-menu-link" title="Report">
+                          <i class="bi bi-file-earmark-bar-graph"></i>
+                          <span>Report</span>
                       </a>
                   </li>
               </ul>

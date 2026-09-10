@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('order_number');
             $table->unsignedInteger('total_price');
             $table->unsignedInteger('change');
-            $table->tinyInteger('payment_status')->default(0)->comment("0:cash, 1:midtrans");
-            $table->tinyInteger('payment_method')->default(0)->comment("0:pending, 1:paid, 2:failed, 3:canceled");
+            $table->tinyInteger('payment_method')->default(0)->comment("0:cash, 1:midtrans");
+            $table->tinyInteger('payment_status')->default(0)->comment("0:pending, 1:paid, 2:failed, 3:canceled");
             $table->string('snap_token')->nullable();
             $table->timestamps();
         });

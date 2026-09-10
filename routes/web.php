@@ -23,10 +23,13 @@ Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('products', ProductController::class);
+    // Transaction
+    Route::get('transactions/{transaction}/print', [OrderController::class, 'print'])->name('transactions.print');
     Route::resource('transactions', OrderController::class);
-    Route::resource('reports', ReportController::class);
+    // Report
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 });
 Route::middleware('auth')->group(function () {
-    //     Route::resource('menu', MenuController::class);
+    //Route::resource('menu', MenuController::class);
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
