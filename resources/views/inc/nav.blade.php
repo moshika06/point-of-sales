@@ -100,9 +100,14 @@
                  <li>
                      <hr class="dropdown-divider">
                  </li>
-                 <li><a class="dropdown-item text-danger" href="page-login.html"><i
+                 <li><a class="dropdown-item text-danger" href="#"
+                         onclick="event.preventDefault(); document.getElementById('logout').submit();"><i
                              class="bi bi-box-arrow-right"></i>
-                         Logout</a></li>
+                         Logout</a>
+                     <form action="{{ route('logout') }}" id="logout" method="post" class="d-none">
+                         @csrf
+                     </form>
+                 </li>
              </ul>
          </div>
      </div>

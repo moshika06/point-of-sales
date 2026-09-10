@@ -97,7 +97,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('products.index')
-            ->with('success', 'Product berhasil diupdate.');
+            ->with('warning', 'Product berhasil diupdate.');
     }
 
     /**
@@ -114,6 +114,6 @@ class ProductController extends Controller
 
         return redirect()
             ->route('products.index')
-            ->with('success', 'Product berhasil dihapus.');
+            ->with('danger', 'Product berhasil dihapus.');
     }
 }

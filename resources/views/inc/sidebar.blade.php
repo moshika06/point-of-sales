@@ -16,13 +16,13 @@
                   </li>
                   <li class="sidebar-menu-item">
                       <a href="{{ route('users.index') }}" class="sidebar-menu-link" id="menu-overview" title="User">
-                          <i class="bi bi-people"></i>
+                          <i class="bi bi-person"></i>
                           <span>User</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">
                       <a href="{{ route('roles.index') }}" class="sidebar-menu-link" id="menu-overview" title="Role">
-                          <i class="bi bi-people"></i>
+                          <i class="bi bi-person-gear"></i>
                           <span>Role</span>
                       </a>
                   </li>
@@ -66,12 +66,6 @@
                       <a href="page-blank.html" class="sidebar-menu-link" id="menu-blankpage" title="Blank Page">
                           <i class="bi bi-file-earmark"></i>
                           <span>Blank Page</span>
-                      </a>
-                  </li>
-                  <li class="sidebar-menu-item">
-                      <a href="page-login.html" class="sidebar-menu-link" id="menu-loginpage" title="Login Page">
-                          <i class="bi bi-box-arrow-in-right"></i>
-                          <span>Login Screen</span>
                       </a>
                   </li>
                   <li class="sidebar-menu-item">

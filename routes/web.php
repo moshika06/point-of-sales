@@ -26,3 +26,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('transactions', OrderController::class);
     Route::resource('reports', ReportController::class);
 });
+Route::middleware('auth')->group(function () {
+    //     Route::resource('menu', MenuController::class);
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+});
