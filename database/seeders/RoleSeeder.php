@@ -16,8 +16,8 @@ class RoleSeeder extends Seeder
         //eloquent : query builder/orm larvel
         Role::insert([
             ['name' => 'Administrator'],
-            ['name' => 'Cashier'],
-            ['name' => 'Leader'],
+            ['name' => 'Kasir'],
+            ['name' => 'Pimpinan'],
         ]);
     }
 }

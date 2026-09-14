@@ -11,20 +11,24 @@ class LoginController extends Controller
     {
         return view('login');
     }
-
     public function actionLogin(Request $request)
     {
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
-
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
+            if ($user && $user->isKasir()) {
+                return redirect()->route('cashier.index');
+            } elseif ($user && $user->isPimpinan()) {
+                return redirect()->route('pimpinan.index');
+            }
             return redirect()->intended('/admin/dashboard');
         }
-
-        return back()->withErrors(['email' => 'Invalid email or password'])->onlyInput('email');
+        return back()
+            ->withErrors(['email' => 'Invalid Email or password'])->onlyInput('email');
     }
     public function logout(Request $request)
     {

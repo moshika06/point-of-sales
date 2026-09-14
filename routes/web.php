@@ -26,10 +26,22 @@ Route::prefix('admin')->group(function () {
     // Transaction
     Route::get('transactions/{transaction}/print', [OrderController::class, 'print'])->name('transactions.print');
     Route::resource('transactions', OrderController::class);
-    // Report
-    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 });
 Route::middleware('auth')->group(function () {
     //Route::resource('menu', MenuController::class);
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+Route::middleware('auth')->prefix('cashier')->group(function () {
+    Route::get('/', [OrderController::class, 'cashier'])->name('cashier.index');
+    Route::post('/payment', [OrderController::class, 'store'])->name('cashier.payment');
+});
+
+Route::middleware('auth')->prefix('pimpinan')->group(function () {
+    // Halaman utama pimpinan = laporan
+    Route::get('/', [ReportController::class, 'index'])
+        ->name('pimpinan.index');
+    // Halaman stok produk
+    Route::get('/stok', [ProductController::class, 'stok'])
+        ->name('pimpinan.stok');
 });
