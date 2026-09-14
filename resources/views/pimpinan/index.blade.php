@@ -38,7 +38,6 @@
                     </li>
                 </ul>
             </div>
-
         </div>
         <div class="sidebar-profile">
             <img src="assets/images/avatar.png" alt="Administrator" class="sidebar-profile-img"

@@ -116,4 +116,12 @@ class ProductController extends Controller
             ->route('products.index')
             ->with('danger', 'Product berhasil dihapus.');
     }
+    public function stok()
+    {
+        $products = Product::with('category')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('pimpinan.stok', compact('products'));
+    }
 }
