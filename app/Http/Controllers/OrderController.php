@@ -260,4 +260,13 @@ class OrderController extends Controller
             ]
         );
     }
+    public function cashier()
+    {
+        $products = Product::with('category')
+            ->where('stock', '>', 0)
+            ->orderBy('name')
+            ->get();
+
+        return view('cashier.index', compact('products'));
+    }
 }

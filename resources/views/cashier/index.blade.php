@@ -406,11 +406,6 @@
                                     {{ $product->name }}
                                 </div>
 
-                                <div class="category">
-                                    Category ID:
-                                    {{ $product->category_id }}
-                                </div>
-
                                 <div class="price">
                                     Rp {{ number_format($product->price, 0, ',', '.') }}
                                 </div>
@@ -510,10 +505,10 @@
 
     <script>
         /*
-        |--------------------------------------------------------------------------
-        | Product data dari Laravel
-        |--------------------------------------------------------------------------
-        */
+                |--------------------------------------------------------------------------
+                | Product data dari Laravel
+                |--------------------------------------------------------------------------
+                */
 
         const products = @json($products);
 
@@ -658,21 +653,21 @@
                         image
                         ?
                         `<img
-                                src="${image}"
-                                class="cart-item-image"
-                            >`
+                                        src="${image}"
+                                        class="cart-item-image"
+                                    >`
                         :
                         `<div
-                                class="cart-item-image"
-                                style="
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    background:#f3f4f6;
-                                "
-                            >
-                                📦
-                            </div>`
+                                        class="cart-item-image"
+                                        style="
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            background:#f3f4f6;
+                                        "
+                                    >
+                                        📦
+                                    </div>`
                     }
 
                     <div>

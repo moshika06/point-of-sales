@@ -37,18 +37,6 @@
                           <span>Category</span>
                       </a>
                   </li>
-                  <li class="sidebar-menu-item">
-                      <a href="{{ route('transactions.index') }}" class="sidebar-menu-link" title="Transaction">
-                          <i class="bi bi-cart-check"></i>
-                          <span>Transaction</span>
-                      </a>
-                  </li>
-                  <li class="sidebar-menu-item">
-                      <a href="{{ route('reports.index') }}" class="sidebar-menu-link" title="Report">
-                          <i class="bi bi-file-earmark-bar-graph"></i>
-                          <span>Report</span>
-                      </a>
-                  </li>
               </ul>
           </div>
           <div class="sidebar-menu-section">
