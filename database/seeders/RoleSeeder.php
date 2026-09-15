@@ -8,16 +8,9 @@ use App\Models\Role;
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         //eloquent : query builder/orm larvel
-        Role::insert([
-            ['name' => 'Administrator'],
-            ['name' => 'Kasir'],
-            ['name' => 'Pimpinan'],
-        ]);
+        Role::insert([['name' => 'Administrator'], ['name' => 'Kasir'], ['name' => 'Pimpinan'],]);
     }
 }

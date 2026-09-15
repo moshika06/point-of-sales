@@ -23,9 +23,7 @@
                     @endif
                 </div>
                 <a class="btn btn-primary" href="{{ route('roles.create') }}">
-                    <i class="bi bi-plus-lg"></i>
-                    Tambah Role
-                </a>
+                    <i class="bi bi-plus-lg"></i>Tambah Role</a>
             </div>
             <table class="table-custom">
                 <thead>

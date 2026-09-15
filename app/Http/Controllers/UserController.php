@@ -51,10 +51,7 @@ class UserController extends Controller
     // UPDATE
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-        ]);
+        $request->validate(['name' => 'required', 'email' => 'required|email|unique:users,email,' . $user->id,]);
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -65,18 +62,11 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()
-            ->route('users.index')
-            ->with('warning', 'User berhasil diubah');
+        return redirect()->route('users.index')->with('warning', 'User berhasil diubah');
     }
-
-    // DELETE
     public function destroy(User $user)
     {
         $user->delete();
-
-        return redirect()
-            ->route('users.index')
-            ->with('danger', 'User berhasil dihapus');
+        return redirect()->route('users.index')->with('danger', 'User berhasil dihapus');
     }
 }

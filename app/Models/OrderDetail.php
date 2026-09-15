@@ -17,6 +17,7 @@ class OrderDetail extends Model
         'subtotal',
     ];
 
+    protected $casts = ['qty' => 'integer', 'unit_price' => 'integer', 'subtotal' => 'integer',];
     public function order()
     {
         return $this->belongsTo(Order::class);

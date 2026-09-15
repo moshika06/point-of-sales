@@ -22,12 +22,8 @@
                             placeholder="roles name">
                     </div>
                 </div>
-                <button class="btn btn-success" type="submit">
-                    Simpan
-                </button>
-                <a class="btn btn-secondary" href="{{ route('roles.index') }}">
-                    Kembali
-                </a>
+                <button class="btn btn-success" type="submit">Simpan</button>
+                <a class="btn btn-secondary" href="{{ route('roles.index') }}">Kembali</a>
             </form>
         </div>
     </div>

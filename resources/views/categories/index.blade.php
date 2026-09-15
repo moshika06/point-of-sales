@@ -23,9 +23,7 @@
                     @endif
                 </div>
                 <a class="btn btn-primary" href="{{ route('categories.create') }}">
-                    <i class="bi bi-plus-lg"></i>
-                    Tambah User
-                </a>
+                    <i class="bi bi-plus-lg"></i>Tambah Category</a>
             </div>
             <table class="table-custom">
                 <thead>
@@ -35,7 +33,6 @@
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     @foreach ($categories as $category)
                         <tr>

@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Menampilkan semua product
-     */
     public function index()
     {
         $products = Product::with('category')
@@ -20,20 +17,11 @@ class ProductController extends Controller
 
         return view('products.index', compact('products'));
     }
-
-    /**
-     * Form tambah product
-     */
     public function create()
     {
         $categories = Category::orderBy('name')->get();
-
         return view('products.create', compact('categories'));
     }
-
-    /**
-     * Simpan product
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -44,7 +32,6 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        // Upload photo
         if ($request->hasFile('photo')) {
             $validated['photo'] = $request->file('photo')
                 ->store('products', 'public');
@@ -56,20 +43,12 @@ class ProductController extends Controller
             ->route('products.index')
             ->with('success', 'Product berhasil ditambahkan.');
     }
-
-    /**
-     * Form edit product
-     */
     public function edit(Product $product)
     {
         $categories = Category::orderBy('name')->get();
 
         return view('products.edit', compact('product', 'categories'));
     }
-
-    /**
-     * Update product
-     */
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
@@ -80,48 +59,31 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
-        // Kalau upload foto baru
         if ($request->hasFile('photo')) {
 
-            // Hapus foto lama
             if ($product->photo) {
                 Storage::disk('public')->delete($product->photo);
             }
 
-            // Simpan foto baru
             $validated['photo'] = $request->file('photo')
                 ->store('products', 'public');
         }
 
         $product->update($validated);
-
-        return redirect()
-            ->route('products.index')
-            ->with('warning', 'Product berhasil diupdate.');
+        return redirect()->route('products.index')->with('warning', 'Product berhasil diupdate.');
     }
-
-    /**
-     * Hapus product
-     */
     public function destroy(Product $product)
     {
-        // Hapus file foto
         if ($product->photo) {
             Storage::disk('public')->delete($product->photo);
         }
 
         $product->delete();
-
-        return redirect()
-            ->route('products.index')
-            ->with('danger', 'Product berhasil dihapus.');
+        return redirect()->route('products.index')->with('danger', 'Product berhasil dihapus.');
     }
     public function stok()
     {
-        $products = Product::with('category')
-            ->orderBy('name', 'asc')
-            ->get();
-
+        $products = Product::with('category')->orderBy('name', 'asc')->get();
         return view('pimpinan.stok', compact('products'));
     }
 }

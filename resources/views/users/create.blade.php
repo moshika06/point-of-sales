@@ -37,12 +37,8 @@
                         <input class="form-control-custom" type="password" name="password" placeholder="your password">
                     </div>
                 </div>
-                <button class="btn btn-success" type="submit">
-                    Simpan
-                </button>
-                <a class="btn btn-secondary" href="{{ route('users.index') }}">
-                    Kembali
-                </a>
+                <button class="btn btn-success" type="submit">Simpan</button>
+                <a class="btn btn-secondary" href="{{ route('users.index') }}">Kembali</a>
             </form>
         </div>
     </div>

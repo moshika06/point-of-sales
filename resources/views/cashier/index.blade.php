@@ -8,7 +8,11 @@
     <title>Cashier - POS</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
     <style>
         * {
             box-sizing: border-box;
@@ -118,12 +122,6 @@
         .product-name {
             font-weight: bold;
             margin-bottom: 7px;
-        }
-
-        .category {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 8px;
         }
 
         .price {
@@ -247,11 +245,69 @@
             margin-top: 20px;
         }
 
-        .payment-section label {
+        .payment-section>label {
             display: block;
             margin-bottom: 7px;
             font-weight: bold;
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Method
+        |--------------------------------------------------------------------------
+        */
+
+        .payment-method-section {
+            margin-bottom: 18px;
+        }
+
+        .payment-method-section>label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .payment-method-option {
+            cursor: pointer;
+            margin: 0 !important;
+        }
+
+        .payment-method-option input {
+            display: none;
+        }
+
+        .payment-method-option span {
+            display: block;
+            text-align: center;
+            padding: 13px 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            transition: .2s;
+        }
+
+        .payment-method-option span:hover {
+            border-color: #93c5fd;
+        }
+
+        .payment-method-option input:checked+span {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Input
+        |--------------------------------------------------------------------------
+        */
 
         .payment-input {
             width: 100%;
@@ -332,201 +388,225 @@
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .payment-methods {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
+    <style>
+        :root {
+            --bs-body-bg: #F4F6F5;
 
+            --brand-forest-dark: #051C12;
+            --brand-forest-medium: #072F1F;
+            --brand-lime: #B4F105;
+            --brand-lime-hover: #C1F824;
+
+            --text-main: #0B130F;
+            --text-muted-green: #6C7E75;
+            --border-light: #E9EFEF;
+
+            --sys-green: #22C55E;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.925rem;
+            font-weight: 500;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+        }
+
+        a {
+            color: var(--brand-forest-medium);
+            text-decoration: none;
+            transition: all 0.25s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--brand-lime-hover);
+        }
+
+        .page-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        @keyframes rotateLogo {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
     <nav class="navbar">
-        <h2>🛒 POS Cashier</h2>
+
+        <h2>
+            🛒 POS Cashier
+        </h2>
 
         <div class="cashier-name">
+
             <span>
                 {{ auth()->user()->name ?? 'Cashier' }}
             </span>
 
             <form action="{{ route('logout') }}" method="POST">
+
                 @csrf
+
                 <button type="submit" class="logout-btn">
                     Logout
                 </button>
+
             </form>
+
         </div>
+
     </nav>
-
     <div class="container">
-
         <div class="page-title">
             <h1>Product</h1>
             <p>Klik produk untuk menambahkannya ke cart.</p>
         </div>
-
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
-
         @if (session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
             </div>
         @endif
-
         <div class="cashier-layout">
-
-            <!-- PRODUCTS -->
             <div class="products-container">
-
                 <div class="products-grid">
-
                     @forelse($products as $product)
                         <div class="product-card" onclick="addToCart({{ $product->id }})"
                             data-id="{{ $product->id }}">
-
                             @if ($product->photo)
                                 <img src="{{ asset('storage/' . $product->photo) }}" class="product-image"
                                     alt="{{ $product->name }}">
                             @else
                                 <div class="product-image"
                                     style="
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    font-size:40px;
-                                ">
+                                        display:flex;
+                                        align-items:center;
+                                        justify-content:center;
+                                        font-size:40px;
+                                    ">
                                     📦
                                 </div>
                             @endif
-
                             <div class="product-info">
-
-                                <div class="product-name">
-                                    {{ $product->name }}
-                                </div>
-
-                                <div class="price">
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
-                                </div>
-
-                                <div class="stock">
-                                    Stock: {{ $product->stock }}
-                                </div>
-
+                                <div class="product-name">{{ $product->name }}</div>
+                                <div class="price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                                <div class="stock">Stock: {{ $product->stock }}</div>
                             </div>
-
                         </div>
-
                     @empty
-
                         <p>Tidak ada produk tersedia.</p>
                     @endforelse
-
                 </div>
-
             </div>
 
-
-            <!-- CART -->
             <div class="cart-container">
-
                 <div class="cart-title">
-
                     <h2>Cart</h2>
-
-                    <button type="button" class="clear-btn" onclick="clearCart()">
-                        Clear
-                    </button>
-
+                    <button type="button" class="clear-btn" onclick="clearCart()">Clear</button>
                 </div>
-
                 <div id="cartItems" class="cart-items"></div>
-
                 <div class="cart-summary">
-
                     <div class="summary-row">
                         <span>Total Qty</span>
                         <strong id="totalQty">0</strong>
                     </div>
-
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span id="totalPrice">
-                            Rp 0
-                        </span>
+                        <span id="totalPrice">Rp 0</span>
                     </div>
-
                     <div class="payment-section">
-
-                        <label for="paid">
-                            Uang Bayar
-                        </label>
-
-                        <input type="number" id="paid" class="payment-input"
-                            placeholder="Masukkan uang pembayaran" min="0" oninput="calculateChange()">
-
-                        <div class="change-box">
-
-                            <span>
-                                Kembalian
-                            </span>
-
-                            <span class="change-value" id="change">
-                                Rp 0
-                            </span>
-
+                        <div class="payment-method-section">
+                            <label>Metode Pembayaran</label>
+                            <div class="payment-methods">
+                                <label class="payment-method-option">
+                                    <input type="radio" name="payment_method" value="0" checked
+                                        onchange="changePaymentMethod()">
+                                    <span>Cash</span>
+                                </label>
+                                <label class="payment-method-option">
+                                    <input type="radio" name="payment_method" value="1"
+                                        onchange="changePaymentMethod()">
+                                    <span>QRIS</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="cashPayment">
+                            <label for="paid">Uang Bayar</label>
+                            <input type="number" id="paid" class="payment-input"
+                                placeholder="Masukkan uang pembayaran" min="0" oninput="calculateChange()">
+                            <div class="change-box">
+                                <span>Kembalian</span>
+                                <span class="change-value" id="change">Rp 0</span>
+                            </div>
+                        </div>
+                        <div id="qrisPayment" style="display:none;">
+                            <div
+                                style="padding:15px; background:#eff6ff; border-radius:8px; text-align:center; color:#1d4ed8;">
+                                <strong>Pembayaran QRIS</strong>
+                                <br>
+                                <small>Silakan lakukan pembayaran menggunakan QRIS.</small>
+                                <br>
+                                <strong id="qrisTotal" style="display:block; margin-top:8px; font-size:20px;">Rp
+                                    0</strong>
+                            </div>
                         </div>
 
                         <form id="paymentForm" action="{{ route('cashier.payment') }}" method="POST">
-
                             @csrf
-
                             <div id="productsInput"></div>
-
-                            <input type="hidden" name="paid" id="paidInput">
-
-                            <button type="button" class="payment-btn" id="paymentButton" onclick="payment()" disabled>
-                                Payment
-                            </button>
-
+                            <input type="hidden" name="paid" id="paidInput" value="0">
+                            <input type="hidden" name="payment_method" id="paymentMethodInput" value="0">
+                            <button type="button" class="payment-btn" id="paymentButton" onclick="payment()"
+                                disabled>Payment</button>
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
-
     <script>
-        /*
-                |--------------------------------------------------------------------------
-                | Product data dari Laravel
-                |--------------------------------------------------------------------------
-                */
-
         const products = @json($products);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cart
-        |--------------------------------------------------------------------------
-        */
-
         let cart = [];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Format Rupiah
-        |--------------------------------------------------------------------------
-        */
 
         function rupiah(number) {
 
@@ -538,42 +618,20 @@
 
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Tambah product ke cart
-        |--------------------------------------------------------------------------
-        */
-
         function addToCart(productId) {
-
-            const product = products.find(
-                item => item.id === productId
-            );
-
+            const product = products.find(item => item.id === productId);
             if (!product) {
                 return;
             }
 
-            const existing = cart.find(
-                item => item.id === productId
-            );
-
+            const existing = cart.find(item => item.id === productId);
             if (existing) {
-
                 if (existing.qty >= product.stock) {
-
-                    alert(
-                        `Stock ${product.name} hanya ${product.stock}`
-                    );
-
+                    alert(`Stock ${product.name} hanya ${product.stock}`);
                     return;
                 }
-
                 existing.qty++;
-
             } else {
-
                 cart.push({
                     id: product.id,
                     name: product.name,
@@ -582,210 +640,87 @@
                     photo: product.photo,
                     qty: 1
                 });
-
             }
-
             renderCart();
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Render cart
-        |--------------------------------------------------------------------------
-        */
-
         function renderCart() {
-
-            const cartContainer =
-                document.getElementById('cartItems');
-
-            const totalQtyElement =
-                document.getElementById('totalQty');
-
-            const totalPriceElement =
-                document.getElementById('totalPrice');
+            const cartContainer = document.getElementById('cartItems');
+            const totalQtyElement = document.getElementById('totalQty');
+            const totalPriceElement = document.getElementById('totalPrice');
 
             if (cart.length === 0) {
-
                 cartContainer.innerHTML = `
-                <div class="empty-cart">
-                    Cart masih kosong.
-                    <br>
-                    Klik product untuk menambahkannya.
-                </div>
-            `;
-
+                    <div class="empty-cart">
+                        Cart masih kosong.
+                        <br>
+                        Klik product untuk menambahkannya.
+                    </div>
+                `;
                 totalQtyElement.innerText = '0';
-
-                totalPriceElement.innerText =
-                    rupiah(0);
-
+                totalPriceElement.innerText = rupiah(0);
                 calculateChange();
-
                 return;
             }
-
 
             let totalQty = 0;
             let totalPrice = 0;
 
-
             cartContainer.innerHTML = cart.map(item => {
-
-                const subtotal =
-                    item.price * item.qty;
-
+                const subtotal = item.price * item.qty;
                 totalQty += item.qty;
                 totalPrice += subtotal;
 
-
-                let image = item.photo ?
-                    `/storage/${item.photo}` :
-                    '';
-
-
+                let image = item.photo ? `/storage/${item.photo}` : '';
                 return `
-                <div class="cart-item">
-
-                    ${
-                        image
-                        ?
-                        `<img
-                                        src="${image}"
-                                        class="cart-item-image"
-                                    >`
-                        :
-                        `<div
-                                        class="cart-item-image"
-                                        style="
-                                            display:flex;
-                                            align-items:center;
-                                            justify-content:center;
-                                            background:#f3f4f6;
-                                        "
-                                    >
-                                        📦
-                                    </div>`
-                    }
-
-                    <div>
-
-                        <div class="cart-item-name">
-                            ${item.name}
+                    <div class="cart-item">
+                        ${ image ?
+                        `<img src="${image}" class="cart-item-image" alt="${item.name}">`
+                            :
+                            `<div class="cart-item-image" style="display:flex; align-items:center; justify-content:center; background:#f3f4f6;">📦</div>`
+                        }
+                        <div>
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${rupiah(item.price)}</div>
+                            <div class="qty-control">
+                                <button type="button" class="qty-btn" onclick="decreaseQty(${item.id})">-</button>
+                                <span class="qty">${item.qty}</span>
+                                <button type="button" class="qty-btn" onclick="increaseQty(${item.id})">+</button>
+                                <button type="button" class="remove-btn" onclick="removeFromCart(${item.id})">Hapus</button>
+                            </div>
                         </div>
-
-                        <div class="cart-item-price">
-                            ${rupiah(item.price)}
-                        </div>
-
-                        <div class="qty-control">
-
-                            <button
-                                type="button"
-                                class="qty-btn"
-                                onclick="decreaseQty(${item.id})"
-                            >
-                                -
-                            </button>
-
-                            <span class="qty">
-                                ${item.qty}
-                            </span>
-
-                            <button
-                                type="button"
-                                class="qty-btn"
-                                onclick="increaseQty(${item.id})"
-                            >
-                                +
-                            </button>
-
-                            <button
-                                type="button"
-                                class="remove-btn"
-                                onclick="removeFromCart(${item.id})"
-                            >
-                                Hapus
-                            </button>
-
-                        </div>
-
+                        <strong>${rupiah(subtotal)}</strong>
                     </div>
-
-                    <strong>
-                        ${rupiah(subtotal)}
-                    </strong>
-
-                </div>
-            `;
-
+                `;
             }).join('');
 
 
-            totalQtyElement.innerText =
-                totalQty;
-
-            totalPriceElement.innerText =
-                rupiah(totalPrice);
-
-
+            totalQtyElement.innerText = totalQty;
+            totalPriceElement.innerText = rupiah(totalPrice);
             calculateChange();
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Tambah qty
-        |--------------------------------------------------------------------------
-        */
-
         function increaseQty(productId) {
-
-            const item = cart.find(
-                item => item.id === productId
-            );
-
+            const item = cart.find(item => item.id === productId);
             if (!item) {
                 return;
             }
 
             if (item.qty >= item.stock) {
-
-                alert(
-                    `Stock ${item.name} hanya ${item.stock}`
-                );
-
+                alert(`Stock ${item.name} hanya ${item.stock}`);
                 return;
             }
-
             item.qty++;
-
             renderCart();
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Kurangi qty
-        |--------------------------------------------------------------------------
-        */
-
         function decreaseQty(productId) {
-
-            const item = cart.find(
-                item => item.id === productId
-            );
-
+            const item = cart.find(item => item.id === productId);
             if (!item) {
                 return;
             }
 
             item.qty--;
-
             if (item.qty <= 0) {
 
                 cart = cart.filter(
@@ -793,37 +728,15 @@
                 );
 
             }
-
             renderCart();
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Remove product
-        |--------------------------------------------------------------------------
-        */
 
         function removeFromCart(productId) {
-
-            cart = cart.filter(
-                item => item.id !== productId
-            );
-
+            cart = cart.filter(item => item.id !== productId);
             renderCart();
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Clear cart
-        |--------------------------------------------------------------------------
-        */
-
         function clearCart() {
-
             if (cart.length === 0) {
                 return;
             }
@@ -833,154 +746,112 @@
             }
 
             cart = [];
-
             document.getElementById('paid').value = '';
-
             renderCart();
-
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Hitung total
-        |--------------------------------------------------------------------------
-        */
-
         function getTotal() {
-
             return cart.reduce(
                 (total, item) => {
-
-                    return total +
-                        (item.price * item.qty);
-
+                    return total + (item.price * item.qty);
                 },
                 0
             );
-
         }
 
+        function changePaymentMethod() {
+            const selected = document.querySelector('input[name="payment_method"]:checked');
+            if (!selected) {
+                return;
+            }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Hitung kembalian
-        |--------------------------------------------------------------------------
-        */
+            const paymentMethod = selected.value;
+            document.getElementById('paymentMethodInput').value = paymentMethod;
+            const cashPayment = document.getElementById('cashPayment');
+            const qrisPayment = document.getElementById('qrisPayment');
+
+            if (paymentMethod === '0') {
+                cashPayment.style.display = 'block';
+                qrisPayment.style.display = 'none';
+                calculateChange();
+                return;
+            }
+
+            cashPayment.style.display = 'none';
+            qrisPayment.style.display = 'block';
+
+            const total = getTotal();
+            document.getElementById('qrisTotal').innerText = rupiah(total);
+            document.getElementById('paid').value = total;
+            document.getElementById('paidInput').value = total;
+            document.getElementById('change').innerText = rupiah(0);
+
+            const button = document.getElementById('paymentButton');
+            button.disabled = cart.length === 0;
+        }
 
         function calculateChange() {
+            const total = getTotal();
+            const paid = Number(document.getElementById('paid').value) || 0;
+            const selected = document.querySelector('input[name="payment_method"]:checked');
+            const paymentMethod = selected ? selected.value : '0';
 
-            const total =
-                getTotal();
+            if (paymentMethod === '1') {
+                document.getElementById('change').innerText = rupiah(0);
+                document.getElementById('paidInput').value = total;
+                document.getElementById('paymentButton').disabled = cart.length === 0;
+                return;
+            }
 
-            const paid =
-                Number(
-                    document.getElementById('paid').value
-                ) || 0;
+            const change = paid - total;
+            document.getElementById('change').innerText = rupiah(change > 0 ? change : 0);
+            document.getElementById('paidInput').value = paid;
 
-            const change =
-                paid - total;
-
-
-            document.getElementById('change').innerText =
-                rupiah(
-                    change > 0 ? change : 0
-                );
-
-
-            const button =
-                document.getElementById('paymentButton');
-
-
-            button.disabled =
-                cart.length === 0 ||
-                paid < total;
-
+            const button = document.getElementById('paymentButton');
+            button.disabled = cart.length === 0 || paid < total;
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Payment
-        |--------------------------------------------------------------------------
-        */
 
         function payment() {
-
             if (cart.length === 0) {
-
-                alert(
-                    'Cart masih kosong.'
-                );
-
+                alert('Cart masih kosong.');
                 return;
             }
+            const total = getTotal();
 
-
-            const total =
-                getTotal();
-
-
-            const paid =
-                Number(
-                    document.getElementById('paid').value
-                ) || 0;
-
-
-            if (paid < total) {
-
-                alert(
-                    'Uang pembayaran masih kurang.'
-                );
-
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+            if (!paymentMethod) {
+                alert('Silakan pilih metode pembayaran.');
                 return;
             }
+            const method = paymentMethod.value;
+            let paid = 0;
+            if (method === '0') {
+                paid = Number(document.getElementById('paid').value) || 0;
+                if (paid < total) {
+                    alert('Uang pembayaran masih kurang.');
+                    return;
+                }
+            } else {
+                paid = total;
+            }
 
-
-            const productsInput =
-                document.getElementById('productsInput');
-
-
+            const productsInput = document.getElementById('productsInput');
             productsInput.innerHTML = '';
 
-
-            cart.forEach((item, index) => {
-
-                productsInput.innerHTML += `
-                <input
-                    type="hidden"
-                    name="products[${index}][id]"
-                    value="${item.id}"
-                >
-
-                <input
-                    type="hidden"
-                    name="products[${index}][qty]"
-                    value="${item.qty}"
-                >
+            cart.forEach(
+                (item, index) => {
+                    productsInput.innerHTML += `
+                <input type="hidden" name="products[${index}][id]" value="${item.id}">
+                <input type="hidden" name="products[${index}][qty]" value="${item.qty}">
             `;
-
-            });
-
-
-            document.getElementById('paidInput').value =
-                paid;
-
-
+                });
+            document.getElementById('paidInput').value = paid;
+            document.getElementById('paymentMethodInput').value = method;
             document.getElementById('paymentForm').submit();
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Initial render
-        |--------------------------------------------------------------------------
-        */
-
         renderCart();
+        changePaymentMethod();
     </script>
-
 </body>
 
 </html>

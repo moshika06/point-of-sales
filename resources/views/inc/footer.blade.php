@@ -5,7 +5,7 @@
             </span>
             <span class="footer-separator">|</span>
             <span class="footer-copy">&copy; 2026 Made with by<a href="https://github.com/moshika06"
-                    target="_blank">Moshika</a>
+                    target="_blank">Moshika</a></span>
         </div>
         <div class="footer-right">
             <ul class="footer-links">

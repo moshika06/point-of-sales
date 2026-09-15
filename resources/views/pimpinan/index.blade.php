@@ -11,68 +11,95 @@
     <meta name="author" content="Point Of Sales">
 
     @include('inc.css')
+    <style>
+        .report-link,
+        .report-title {
+            transition: all 0.2s ease;
+        }
+
+        body:has(.report-link:hover) .report-title {
+            color: #0d6efd;
+        }
+
+        body:has(.report-title:hover) .report-link {
+            color: #0d6efd;
+            background-color: #f0f6ff;
+        }
+
+        .report-link:hover {
+            color: #0d6efd;
+            background-color: #f0f6ff;
+        }
+
+        .report-title:hover {
+            color: #0d6efd;
+        }
+
+        body:has(.report-link:hover) .report-title,
+        .report-title:hover {
+            color: #0d6efd;
+        }
+    </style>
 
 </head>
 
 <body>
     <div class="sidebar-wrapper" id="sidebar">
-        <a href="{{ '/admin/dashboard' }}" class="sidebar-brand">
+        <a href="{{ route('pimpinan.index') }}" class="sidebar-brand">
             <i class="bi bi-asterisk"></i>
-            <span>Manager</span>
+            <span>Pimpinan</span>
         </a>
         <div class="flex-grow-1 overflow-y-auto">
             <div class="sidebar-menu-section">
-                <div class="sidebar-menu-title">Menu</div>
+                <div class="sidebar-menu-title"> Menu </div>
                 <ul class="sidebar-menu-list">
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('pimpinan.index') }}" class="sidebar-menu-link" title="Dashboard">
+                        <a href="{{ route('pimpinan.index') }}" class="sidebar-menu-link report-link"
+                            id="sidebar-report">
                             <i class="bi bi-file-earmark-bar-graph"></i>
                             <span>Report</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('pimpinan.stok') }}" class="sidebar-menu-link" title="User">
+                        <a href="{{ route('pimpinan.stok') }}" class="sidebar-menu-link stok-link">
                             <i class="bi bi-box-seam"></i>
-                            <span>Stok Barang</span>
+                            <span>Stok Product</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="sidebar-profile">
-            <img src="assets/images/avatar.png" alt="Administrator" class="sidebar-profile-img"
-                onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop'">
             <div class="sidebar-profile-info">
-                <div class="sidebar-profile-name">Manager</div>
-                <div class="sidebar-profile-email">pimpinan@email.com</div>
+                <div class="sidebar-profile-name">
+                    {{ auth()->user()->name ?? 'Pimpinan' }}
+                </div>
+                <div class="sidebar-profile-email">
+                    {{ auth()->user()->email ?? '-' }}
+                </div>
             </div>
         </div>
     </div>
     <div class="main-wrapper">
-
         @include('inc.nav')
 
-        <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h1 class="page-title">@yield('title', 'Point Of Sales')</h1>
+                <h1 class="page-title report-title" id="page-report">
+                    @yield('title', 'Report')
+                </h1>
             </div>
-
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
-                        <a href="{{ url('/admin/dashboard') }}" class="text-decoration-none text-muted-green">
-                            Home
-                        </a>
+                        <a href="{{ url('/admin/dashboard') }}" class="text-decoration-none text-muted-green">Home</a>
                     </li>
-
                     <li class="breadcrumb-item active text-main" aria-current="page">
                         @yield('breadcrumb', 'Dashboard')
                     </li>
                 </ol>
             </nav>
         </div>
-
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3>Laporan Transaksi</h3>
@@ -103,9 +130,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h6 class="text-muted"> Total Transaksi</h6>
-                            <h3>
-                                {{ $totalTransaction }}
-                            </h3>
+                            <h3>{{ $totalTransaction }}</h3>
                         </div>
                     </div>
                 </div>
@@ -113,7 +138,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h6 class="text-muted">Total Pendapatan</h6>
-                            <h3> Rp {{ number_format($totalIncome, 0, ',', '.') }}</h3>
+                            <h3>Rp {{ number_format($totalIncome, 0, ',', '.') }}</h3>
                         </div>
                     </div>
                 </div>
@@ -130,9 +155,8 @@
                                 {{ \Carbon\Carbon::parse($endDate)->format('d-m-Y') }}
                             </small>
                         </div>
-                        <button type="button" onclick="window.print()" class="btn btn-secondary">
-                            🖨 Print Laporan
-                        </button>
+                        <button type="button" onclick="window.print()" class="btn btn-secondary">🖨 Print
+                            Laporan</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
@@ -145,7 +169,6 @@
                                     <th> Tanggal </th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 @forelse($orders as $order)
                                     <tr>
@@ -202,13 +225,36 @@
             }
         </style>
 
-
         @include('inc.footer')
 
     </div>
 
     @include('inc.js')
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarReport = document.getElementById('sidebar-report');
+            const pageReport = document.getElementById('page-report');
+
+            if (!sidebarReport || !pageReport) return;
+
+            pageReport.addEventListener('mouseenter', function() {
+                sidebarReport.classList.add('linked-hover');
+            });
+
+            pageReport.addEventListener('mouseleave', function() {
+                sidebarReport.classList.remove('linked-hover');
+            });
+
+            sidebarReport.addEventListener('mouseenter', function() {
+                pageReport.classList.add('linked-hover');
+            });
+
+            sidebarReport.addEventListener('mouseleave', function() {
+                pageReport.classList.remove('linked-hover');
+            });
+        });
+    </script>
 </body>
 
 </html>

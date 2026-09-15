@@ -42,9 +42,7 @@
                 <tbody>
                     @forelse($products as $product)
                         <tr>
-                            <td>
-                                {{ $loop->iteration }}
-                            </td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>
                                 @if ($product->photo)
                                     <img src="{{ asset('storage/' . $product->photo) }}" width="70" height="70"
@@ -76,9 +74,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">
-                                Belum ada product.
-                            </td>
+                            <td colspan="7" class="text-center">Belum ada product.</td>
                         </tr>
                     @endforelse
                 </tbody>

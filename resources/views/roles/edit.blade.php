@@ -23,12 +23,8 @@
                             value="{{ old('name', $role->name) }}">
                     </div>
                 </div>
-                <button class="btn btn-warning" type="submit">
-                    Update
-                </button>
-                <a class="btn btn-secondary" href="{{ route('roles.index') }}">
-                    Kembali
-                </a>
+                <button class="btn btn-warning" type="submit">Update</button>
+                <a class="btn btn-secondary" href="{{ route('roles.index') }}">Kembali</a>
             </form>
         </div>
     </div>

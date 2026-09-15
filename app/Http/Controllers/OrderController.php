@@ -13,19 +13,13 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('user')
-            ->latest()
-            ->paginate(10);
-
+        $orders = Order::with('user')->latest()->paginate(10);
         return view('transactions.index', compact('orders'));
     }
 
     public function create()
     {
-        $products = Product::where('stock', '>', 0)
-            ->orderBy('name', 'asc')
-            ->get();
-
+        $products = Product::where('stock', '>', 0)->orderBy('name', 'asc')->get();
         return view('transactions.create', compact('products'));
     }
 
@@ -36,14 +30,19 @@ class OrderController extends Controller
             'products.*.id' => 'required|exists:products,id',
             'products.*.qty' => 'required|integer|min:1',
             'paid' => 'required|integer|min:0',
+            'payment_method' => 'required|in:0,1',
         ], [
             'products.required' => 'Produk harus dipilih.',
             'products.min' => 'Minimal ada satu produk.',
             'products.*.id.required' => 'Produk harus dipilih.',
             'products.*.id.exists' => 'Produk tidak ditemukan.',
             'products.*.qty.required' => 'Jumlah produk harus diisi.',
+            'products.*.qty.integer' => 'Jumlah produk harus berupa angka.',
             'products.*.qty.min' => 'Jumlah produk minimal 1.',
             'paid.required' => 'Uang pembayaran harus diisi.',
+            'paid.min' => 'Uang pembayaran tidak boleh kurang dari 0.',
+            'payment_method.required' => 'Metode pembayaran harus dipilih.',
+            'payment_method.in' => 'Metode pembayaran tidak valid.',
         ]);
 
         if (!auth()->check()) {
@@ -52,93 +51,62 @@ class OrderController extends Controller
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-
         DB::beginTransaction();
 
         try {
-
             $total = 0;
             $cart = [];
-
             foreach ($request->products as $item) {
-                $product = Product::lockForUpdate()
-                    ->findOrFail($item['id']);
-
+                $product = Product::lockForUpdate()->findOrFail($item['id']);
                 $qty = (int) $item['qty'];
 
                 if ($qty > $product->stock) {
-
                     throw new \Exception(
                         "Stok {$product->name} hanya tersedia {$product->stock}."
                     );
                 }
 
                 $subtotal = $product->price * $qty;
-
                 $total += $subtotal;
-
-                $cart[] = [
-                    'product' => $product,
-                    'qty' => $qty,
-                    'subtotal' => $subtotal,
-                ];
+                $cart[] = ['product' => $product, 'qty' => $qty, 'subtotal' => $subtotal,];
             }
 
-            $paid = (int) $request->paid;
+            $paymentMethod = (int) $request->payment_method;
 
-            if ($paid < $total) {
+            if ($paymentMethod === 0) {
+                $paid = (int) $request->paid;
 
-                throw new \Exception(
-                    'Uang pembayaran kurang.'
-                );
+                if ($paid < $total) {
+                    throw new \Exception(
+                        'Uang pembayaran kurang.'
+                    );
+                }
+                $change = $paid - $total;
+            } else {
+                $paid = $total;
+                $change = 0;
             }
 
-            $change = $paid - $total;
-
-            $orderNumber =
-                'TRX-' .
-                now()->format('YmdHis') .
-                '-' .
-                strtoupper(Str::random(5));
+            $paymentStatus = 1;
+            $orderNumber = 'TRX-' . now()->format('YmdHis') . '-' . strtoupper(Str::random(5));
 
             $order = Order::create([
                 'user_id' => auth()->id(),
-
                 'order_number' => $orderNumber,
-
                 'total_price' => $total,
-
                 'change' => $change,
-
-                // Berdasarkan migration:
-                // 0 = cash
-                // 1 = midtrans
-                'payment_status' => 0,
-
-                // Berdasarkan migration:
-                // 0 = pending
-                // 1 = paid
-                // 2 = failed
-                // 3 = canceled
-                'payment_method' => 1,
-
-                'snap_token' => null,
+                'payment_status' => $paymentStatus,
+                'payment_method' => $paymentMethod,
             ]);
 
             foreach ($cart as $item) {
-
                 OrderDetail::create([
                     'order_id' => $order->id,
-
                     'product_id' => $item['product']->id,
-
                     'qty' => $item['qty'],
-
                     'unit_price' => $item['product']->price,
-
                     'subtotal' => $item['subtotal'],
                 ]);
-
 
                 $item['product']->decrement(
                     'stock',
@@ -146,127 +114,53 @@ class OrderController extends Controller
                 );
             }
 
-
             DB::commit();
-
-
-            return redirect()
-                ->route('transactions.show', $order->id)
-                ->with(
-                    'success',
-                    'Transaksi berhasil disimpan.'
-                );
+            return redirect()->route('transactions.show', $order->id)->with('success', 'Transaksi berhasil disimpan.');
         } catch (\Exception $e) {
-
             DB::rollBack();
-
-            return back()
-                ->withInput()
-                ->with(
-                    'error',
-                    $e->getMessage()
-                );
+            return back()->withInput()->with('error', $e->getMessage());
         }
     }
-
     public function show(Order $transaction)
     {
-        $transaction->load([
-            'user',
-            'details.product'
-        ]);
-
-        return view(
-            'transactions.show',
-            [
-                'order' => $transaction
-            ]
-        );
+        $transaction->load(['user', 'details.product']);
+        return view('transactions.show', ['order' => $transaction]);
     }
-
     public function edit(Order $transaction)
     {
-        return redirect()
-            ->route(
-                'transactions.show',
-                $transaction->id
-            );
+        return redirect()->route('transactions.show', $transaction->id);
     }
     public function update(
         Request $request,
         Order $transaction
     ) {
-        return redirect()
-            ->route(
-                'transactions.show',
-                $transaction->id
-            )
-            ->with(
-                'error',
-                'Transaksi tidak dapat diedit.'
-            );
+        return redirect()->route('transactions.show', $transaction->id)->with('error', 'Transaksi tidak dapat diedit.');
     }
     public function destroy(Order $transaction)
     {
         DB::beginTransaction();
-
         try {
-
             foreach ($transaction->details as $detail) {
-
-                Product::where(
-                    'id',
-                    $detail->product_id
-                )->increment(
-                    'stock',
-                    $detail->qty
-                );
+                Product::where('id', $detail->product_id)->increment('stock', $detail->qty);
             }
-
 
             $transaction->delete();
 
             DB::commit();
-
-
-            return redirect()
-                ->route('transactions.index')
-                ->with(
-                    'success',
-                    'Transaksi berhasil dihapus.'
-                );
+            return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil dihapus.');
         } catch (\Exception $e) {
-
             DB::rollBack();
-
-            return back()
-                ->with(
-                    'error',
-                    'Transaksi gagal dihapus.'
-                );
+            return back()->with('error', 'Transaksi gagal dihapus.');
         }
     }
-    public function print(Order $transaction)
+    public function print($id)
     {
-        $transaction->load([
-            'user',
-            'details.product'
-        ]);
-
-        return view(
-            'print.receipt',
-            [
-                'order' => $transaction
-            ]
-        );
+        $order = Order::with(['user', 'details.product'])->findOrFail($id);
+        return view('transactions.print', compact('order'));
     }
     public function cashier()
     {
-        $products = Product::with('category')
-            ->where('stock', '>', 0)
-            ->orderBy('name')
-            ->get();
-
+        $products = Product::with('category')->where('stock', '>', 0)->orderBy('name', 'asc')->get();
         return view('cashier.index', compact('products'));
     }
 }

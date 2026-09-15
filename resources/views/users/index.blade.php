@@ -2,6 +2,35 @@
 @section('title', 'Data User')
 @section('breadcrumb', 'User')
 @section('content')
+    <style>
+        .stok-link,
+        .stok-title-link {
+            transition: all 0.2s ease;
+        }
+
+        body:has(.stok-link:hover) .stok-title-link {
+            color: #0d6efd;
+        }
+
+        body:has(.stok-title-link:hover) .stok-link {
+            color: #0d6efd;
+            background-color: #f0f6ff;
+        }
+
+        .stok-link:hover {
+            color: #0d6efd;
+            background-color: #f0f6ff;
+        }
+
+        .stok-title-link:hover {
+            color: #0d6efd;
+        }
+
+        body:has(.stok-link:hover) .stok-title-link,
+        .stok-title-link:hover {
+            color: #0d6efd;
+        }
+    </style>
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -29,11 +58,11 @@
             </div>
             <table class="table-custom">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
-                        <th class="text-center">Aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
 

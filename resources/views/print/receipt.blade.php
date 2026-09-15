@@ -119,9 +119,7 @@
             <td class="right"> Rp. {{ number_format($order->change, 0, ',', '.') }} </td>
         </tr>
     </table>
-
     <div class="line"></div>
-
     <div class="center">
         <strong>TERIMA KASIH</strong>
         <br>

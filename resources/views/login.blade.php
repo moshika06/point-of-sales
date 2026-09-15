@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form - Point Of Sales</title>
 
-    <!-- SEO Optimization -->
+    <!--SEO Optimization-->
     <meta name="description" content="Login Screen - Spark Admin Premium Bootstrap 5 Admin Dashboard Template">
     <meta name="author" content="Spark Admin Team">
 

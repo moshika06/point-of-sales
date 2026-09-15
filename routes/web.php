@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
@@ -15,21 +16,18 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->group(function () {
+    //login
     Route::get('/', [LoginController::class, 'login']);
     Route::get('/login', [LoginController::class, 'login']);
     Route::post('/actionlogin', [LoginController::class, 'actionLogin'])->name('action-login');
+    //page
     Route::resource('dashboard', DashboardController::class);
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('roles', RoleController::class);
-    Route::resource('products', ProductController::class);
-    // Transaction
+    Route::resource('products',  ProductController::class);
+    Route::resource('transactions',  OrderController::class);
     Route::get('transactions/{transaction}/print', [OrderController::class, 'print'])->name('transactions.print');
-    Route::resource('transactions', OrderController::class);
-});
-Route::middleware('auth')->group(function () {
-    //Route::resource('menu', MenuController::class);
-    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 Route::middleware('auth')->prefix('cashier')->group(function () {
@@ -38,10 +36,10 @@ Route::middleware('auth')->prefix('cashier')->group(function () {
 });
 
 Route::middleware('auth')->prefix('pimpinan')->group(function () {
-    // Halaman utama pimpinan = laporan
-    Route::get('/', [ReportController::class, 'index'])
-        ->name('pimpinan.index');
-    // Halaman stok produk
-    Route::get('/stok', [ProductController::class, 'stok'])
-        ->name('pimpinan.stok');
+    Route::get('/', [ReportController::class, 'index'])->name('pimpinan.index');
+    Route::get('/stok', [ProductController::class, 'stok'])->name('pimpinan.stok');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 });
